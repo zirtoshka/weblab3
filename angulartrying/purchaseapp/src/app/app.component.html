@@ -1,0 +1,30 @@
+<h1> Список покупок </h1>
+<div>
+    <p>
+        <label>purchase</label><br>
+        <input [(ngModel)]="text" />
+    </p>
+    <p>
+        <label>price</label><br>
+        <input type="number" [(ngModel)]="price" />
+    </p>
+    <button (click)="addItem(text, price)">add</button>
+</div>
+<table>
+    <thead>
+    <tr>
+        <th>purchase</th>
+        <th>price</th>
+        <th>done</th>
+    </tr>
+    </thead>
+    <tbody>
+    @for (item of items; track item.purchase) {
+    <tr>
+        <td>{{item.purchase}}</td>
+                    <td>{{item.price}}</td>
+                    <td><input type="checkbox" [(ngModel)]="item.done" /></td>
+                </tr>
+    }
+    </tbody>
+</table>
