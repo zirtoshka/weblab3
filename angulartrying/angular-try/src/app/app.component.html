@@ -1,0 +1,26 @@
+<div xmlns:th="http://www.w3.org/1999/xhtml">
+  <p>
+    <label>Имя</label><br>
+    <input name="username" [(ngModel)]="user.name" />
+  </p>
+  <p>
+    <label>password</label><br>
+    <input  name="password" [(ngModel)]="user.password" />
+  </p>
+  <button class="btn btn-default" (click)="register(user)">Registration</button>
+  <button class="btn btn-default" (click)="authenticate(user)">authenticate</button>
+  <button class="btn btn-default" (click)="getContent()">get content (only for auth users)</button>
+
+
+
+
+
+
+</div>
+
+<h3>Ответ сервера</h3>
+<div>
+Result:{{done}}<br>
+Error: {{messageErr}}<br>
+</div>
+
