@@ -36,7 +36,7 @@ export class AppComponent {
           this.done = true;
         },
         error: error => {
-          this.messageErr = error;
+          this.messageErr = `Ошибка: ${error.status} ${error.statusText}. Сообщение: ${error.message}`;
           this.done = false;
         }
       });
@@ -48,9 +48,10 @@ export class AppComponent {
         next: (data: any) => {
           this.receivedToken = data;
           this.done = true;
+          this.messageErr = "авторизация прошла успешно xdd";
         },
         error: error => {
-          this.messageErr = error;
+          this.messageErr = `Ошибка xdd: ${error.status} ${error.statusText}. Сообщение: ${error.message}`;
           this.done = false;
         }
       });
@@ -61,15 +62,16 @@ export class AppComponent {
       this.httpService.getDataWithToken(this.receivedToken)
         .subscribe({
           next: (data: any) => {
-            this.messageErr = data;
             this.done = true;
-            this.messageErr="okkk"
+            this.messageErr="okkk";
           },
           error: error => {
-            this.messageErr = error;
+            console.log(error);
+            this.messageErr = `Ошибка zalupi: ${error.status} ${error.statusText}. Сообщение: ${error.message}`;
             this.done = false;
           }
         });
+
     } else {
       this.messageErr = "error";
     }
