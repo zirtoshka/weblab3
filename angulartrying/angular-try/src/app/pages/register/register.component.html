@@ -1,0 +1,24 @@
+<a  routerLink="/authenticate">authenticate</a>
+
+<form #registerForm="ngForm" (ngSubmit)="onSubmit(registerForm)" >
+  <div >
+    <div >
+      <h4>Registration</h4>
+
+      <button  routerLink="/authenticate" > authenticate</button>
+
+    </div>
+    <div>
+      <label  for="username">Username</label>
+      <input  id="username" name="username" ngModel pInputText placeholder="Username" type="text">
+      <label  for="password">Password</label>
+      <input  id="password" name="password" ngModel pInputText placeholder="Password" type="password">
+      <label  for="passwordConfirmation">Confirm password</label>
+      <input  id="passwordConfirmation" name="passwordConfirmation" ngModel pInputText
+             placeholder="Confirm password"
+             type="password">
+      <button [disabled]="registerForm.value.password != registerForm.value.passwordConfirmation"
+              icon="pi pi-user" label="Create an account" pButton pRipple>reg!!!</button>
+    </div>
+  </div>
+</form>
