@@ -29,17 +29,22 @@ public class DemoController {
     }
     @PostMapping("/addShot")
     public ResponseEntity<String> addShot(
-            @RequestHeader("Authorization") String token
+            @RequestHeader("Authorization") String header
     ){
-        String jwt = token.substring(7);
-        String username = jwtService.extractUsername(jwt);
-        if (repository.findByName(username)==null){
+        String username =getUsername(header);
+        if (repository.findByName(username).isEmpty()){
             return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
         }
 
 
         return ResponseEntity.ok(username);
 
+    }
+
+    private String getUsername(String header){
+        String jwt = header.substring(7);
+        String username = jwtService.extractUsername(jwt);
+        return username;
     }
 }
 
