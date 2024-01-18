@@ -2,9 +2,13 @@
 
 @if (userService.isLoggedIn) {
 <h1>Hello, {{ userService.username }}!</h1>
+
  <a routerLink="home">shot shot shooots!</a><br><br>
 <p-button label="Logout" (onClick)="userService.logout()"></p-button>
+
 } @else {
+
 <h1>Hello, unknown lupa!</h1>
-<button routerLink="/authenticate" icon="pi pi-user" label="authenticate" > authenticate</button>
+<p-button routerLink="/authenticate" icon="pi pi-user" label="authenticate" ></p-button>
+
 }

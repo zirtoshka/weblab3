@@ -1,9 +1,9 @@
 import {CanActivateFn, Router, Routes} from '@angular/router';
-import {WelcomeComponent} from "./pages/welcome/welcome.component";
-import {HomeComponent} from "./pages/home/home.component";
+import {WelcomeComponent} from "./compo/welcome/welcome.component";
+import {HomeComponent} from "./compo/home/home.component";
 import {inject} from "@angular/core";
-import {AuthenticateComponent} from "./pages/authenticate/authenticate.component";
-import {RegisterComponent} from "./pages/register/register.component";
+import {AuthenticateComponent} from "./compo/authenticate/authenticate.component";
+import {RegisterComponent} from "./compo/register/register.component";
 import {AuthService} from "./auth.service";
 
 const authGuard: CanActivateFn = (route, state) => {

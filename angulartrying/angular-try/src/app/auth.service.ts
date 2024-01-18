@@ -32,7 +32,7 @@ export class AuthService {
     }
 
     get authToken(): string | null {
-        return sessionStorage.getItem('token')  // TODO: httpOnly cookie
+        return sessionStorage.getItem('token')  
     }
 
     set authToken(token: string | null | undefined) {
