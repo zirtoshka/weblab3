@@ -9,16 +9,21 @@ import com.zirtoshka.pupa.shot.Coordinates;
 import com.zirtoshka.pupa.shot.Shot;
 import com.zirtoshka.pupa.shot.ShotRepository;
 import com.zirtoshka.pupa.user.UserRepository;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -41,16 +46,12 @@ public class DemoController {
     @PostMapping("/addShot")
     public ResponseEntity<String> addShot(
             @RequestHeader("Authorization") String header,
-            @RequestBody Coordinates coordinates
+           @Valid @RequestBody Coordinates coordinates
             ){
-        System.out.println(coordinates.getX());
         String username =getUsername(header);
-        System.out.println(username);
         if (userRepository.findByName(username).isEmpty()){
             return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
         }
-
-        //todo add validation
         Shot shot = new Shot();
         shot.setX(coordinates.getX());
         shot.setY(coordinates.getY());
@@ -59,7 +60,6 @@ public class DemoController {
         shot.setCreateTime(LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")));
         shot.setKill(AreaChecker.checkIsKill(coordinates.getX(), coordinates.getY(),coordinates.getR()));
         shotRepository.save(shot);
-
         return ResponseEntity.ok(username);
     }
 
@@ -89,7 +89,6 @@ public class DemoController {
             return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
         }
         shotRepository.deleteShotsByOwnername(username);
-        System.out.println("kokoko");
         return ResponseEntity.noContent().build();
 
     }
@@ -100,6 +99,19 @@ public class DemoController {
         String jwt = header.substring(7);
         String username = jwtService.extractUsername(jwt);
         return username;
+    }
+
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<?> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getAllErrors().forEach((error) -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+        return ResponseEntity.badRequest().body(errors);
+//        response ex: {"r":"r must be greater than or equal to 0.0"}
     }
 }
 
