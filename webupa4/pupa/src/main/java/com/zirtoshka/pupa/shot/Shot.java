@@ -1,15 +1,18 @@
 package com.zirtoshka.pupa.shot;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 @Entity
 @Table(name = "_shot")
 public class Shot {
+    @JsonIgnore
     @Id
     @GeneratedValue
     private Integer id;
@@ -17,5 +20,7 @@ public class Shot {
     private Double y;
     private Double r;
     private String createTime;
+    @JsonIgnore
     private String ownername;
+    private boolean isKill;
 }
