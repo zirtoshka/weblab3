@@ -19,7 +19,10 @@ public class AuthenticationService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
-    public AuthenticationResponse register(RegisterRequest request) {
+    public AuthenticationResponse register(RegisterRequest request) throws Exception {
+        if (repository.existsByName(request.getName())) {
+            throw new Exception("User with this name already exists");
+        }
         var user = User.builder()
                 .name(request.getName())
                 .password(passwordEncoder.encode(request.getPassword()))
