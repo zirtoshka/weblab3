@@ -28,7 +28,6 @@ export class RegisterComponent {
     onSubmit(form: NgForm) {
         const {username, password, passwordConfirmation} = form.value
         console.log(username, password);
-        console.log("jopa")
         debugger
         this.validationFailed = false
         if (username == null || username.length < 6 || username.length > 20)

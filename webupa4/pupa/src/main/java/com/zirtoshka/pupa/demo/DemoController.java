@@ -60,7 +60,7 @@ public class DemoController {
         shot.setCreateTime(LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")));
         shot.setKill(AreaChecker.checkIsKill(coordinates.getX(), coordinates.getY(),coordinates.getR()));
         shotRepository.save(shot);
-        return ResponseEntity.ok(username);
+        return ResponseEntity.ok("{\"message\":\"" +username+"'s shot is ok\"}");
     }
 
     @GetMapping("/getShots")
