@@ -1,3 +1,30 @@
 <p>shot-form works!</p>
-<p-slider [(ngModel)]="value"></p-slider>
+<!--<form id="shot_form" #shotForm="ngForm" (ngSubmit)="onSubmit(shotForm)">-->
+<div>
+    <p-inputGroupAddon>
+        X
+    </p-inputGroupAddon>
+    <p-inputNumber pInputText [(ngModel)]="valueX" class="w-full"  [disabled]="true" locale="en-US"/>
+    <p-slider [(ngModel)]="valueX" class="w-full" [min]="-5" [max]="3" [step]="0.1"  ></p-slider>
+</div>
+<br>
+<div>
+        <p-inputGroupAddon>
+            Y
+        </p-inputGroupAddon>
+        <p-inputNumber [(ngModel)]="valueY"  locale="en-US" [minFractionDigits]="0" [maxFractionDigits]="15" [min]="-5" [max]="3"/>
+</div>
+<br>
+<div>
+    <p-inputGroupAddon>
+        R
+    </p-inputGroupAddon>
+    <p-inputNumber pInputText [(ngModel)]="valueR" class="w-full" [disabled]="true" locale="en-US"/>
+    <p-slider [(ngModel)]="valueR" class="w-full" [min]="-5" [max]="3" [step]="0.1"></p-slider>
+</div>
+<br>
+    <p-button class="shoot-button" label="Shoot" pButton [disabled]="!isFormValid()"></p-button>
+
+<!--</form>-->
+
 
