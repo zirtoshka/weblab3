@@ -11,6 +11,7 @@ import {NgIf} from "@angular/common";
 import {MessageService} from "primeng/api";
 import {ShotService} from "../../shot.service";
 import {GraphComponent} from "../graph/graph.component";
+import {HomeComponent} from "../home/home.component";
 
 
 @Component({
@@ -37,7 +38,8 @@ export class ShotFormComponent {
   displayValueX = 0;
   displayValueR = 0;
   private shotService = inject(ShotService);
-  // private graphComponent = inject(GraphComponent);
+  graphComponent = inject(GraphComponent);
+  homeComponent = inject(HomeComponent);
 
 
   constructor(private formBuilder: FormBuilder) {
@@ -57,12 +59,12 @@ export class ShotFormComponent {
         Validators.max(3),
         Validators.pattern('-?\\d+(\\.\\d+)?')]]
     });
+    sessionStorage.setItem('r', '0');
+
   }
 
   submit() {
     console.log(this.shotForm);
-    // console.log(Number(this.shotForm.value.x.replace(",","."))+2);
-    // console.log(Number(this.shotForm.value.x)+2);
     this.shotService.addShot(Number(this.shotForm.value.x), Number(this.shotForm.value.y), Number(this.shotForm.value.r));
 
   }
@@ -73,8 +75,21 @@ export class ShotFormComponent {
 
   onSliderChangeR(event: any) {
     this.displayValueR = event.value;
-    // this.graphComponent.refresh(3);
+    console.log(this.displayValueR);
+    if (this.displayValueR >= 0) {
+      this.graphComponent.refresh(Number(this.displayValueR));
+      sessionStorage.setItem('r', String(this.displayValueR));
+    }else {
+      sessionStorage.setItem('r', '-1000');
+
+    }
+
+
   }
 
+  getR() {
+    return this.displayValueR;
+  }
 
+  protected readonly Number = Number;
 }

@@ -1,6 +1,14 @@
-<div id="jxgbox" class="m-auto border-2" style="width: 350px; height:350px" (click)="onClick($event)">
-
+<div id="jxgbox"
+     class="m-auto border-2"
+     style="width: 350px; height:350px"
+     (click)="onClick($event)"
+>
 </div>
 <div *ngIf="errorMessage!=''" class="alert alert-danger">
-    Error: {{errorMessage}}
+  Error: {{errorMessage}}
+</div>
+<div>
+  <p-slider [(ngModel)]="r" class="w-full" [min]="0" [max]="5" [step]="0.1" (onChange)="refresh(r)" ></p-slider>
+
+
 </div>
