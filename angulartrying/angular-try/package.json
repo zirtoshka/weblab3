@@ -4,7 +4,8 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "ng build --base-href /~s367222/lab4/",
+    "deploy": "npm run build && scp -r -P 2222 ./dist/angular-try/browser/* s367222@helios.cs.ifmo.ru:~/public_html/lab4",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
@@ -20,6 +21,7 @@
     "@angular/platform-browser": "^17.0.0",
     "@angular/platform-browser-dynamic": "^17.0.0",
     "@angular/router": "^17.0.0",
+    "axios": "^1.6.5",
     "primeicons": "^6.0.1",
     "primeng": "^17.3.3",
     "rxjs": "~7.8.0",

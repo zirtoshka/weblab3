@@ -52,8 +52,8 @@ export class GraphComponent {
 
   ngOnInit() {
     this.r = Number(sessionStorage.getItem('r'));
+    this.board = this.boardInit();
     this.refresh(this.r);
-    // this.board = this.boardInit();
   }
 
   onClick(e: MouseEvent) {
@@ -65,7 +65,6 @@ export class GraphComponent {
       let y = coords[1].toFixed(2);
       let r = this.r;
 
-      console.log(x + " " + y + " " + r);
 
       let data = sessionStorage.getItem('shots');
       if (data) {
@@ -75,64 +74,43 @@ export class GraphComponent {
       }
 
       this.shotService.addShot(Number(x), Number(y), Number(r)).subscribe((shot: ShotResponse) => {
-        console.log("1сейчас должна  нарисоваться точка")
         this.shotStore.push(shot);
         this.drawShots(this.r);
         sessionStorage.setItem('shots', JSON.stringify(this.shotStore));
-        console.log("2сейчас должна  нарисоваться точка")
-        // this.refresh(shot.r); если это сделать то почему то лейблы остаются
       });
     } else {
       this.showError(' You have to choose correct R');
     }
   }
 
-
   refresh(r: number) {
     this.r = r;
     if (r >= 0) {
-      if (!this.board) {
-        this.board = this.boardInit();
-        return;
+      this.r = r;
+      this.clearBoard();
+      this.drawFigures(r);
+      this.createLabelsR(r);
+      let data = sessionStorage.getItem('shots');
+      if (data) {
+        this.shotStore = JSON.parse(data) as ShotResponse[];
       } else {
-        this.r = r;
-        console.log("Graph: " + r);
-        console.log("dr_shots " + this.dr_shots.length)
-        this.clearBoard();
-        console.log("dr_shots after " + this.dr_shots.length)
-
-        // this.boardInit();
-        this.drawFigures(r);
-        this.createLabelsR(r);
-
-        // console.log(sessionStorage.getItem("shots"));
-        let data = sessionStorage.getItem('shots');
-        if (data) {
-          this.shotStore = JSON.parse(data) as ShotResponse[];
-        } else {
-          this.shotStore = [];
+        this.shotStore = [];
+      }
+      for (let shot of this.shotStore) {
+        if (shot.r == this.r) {
+          this.dr_shots.push(<GeometryElement>this.createPoint(shot));
         }
-        for (let shot of this.shotStore) {
-          if (shot.r == this.r) {
-            this.dr_shots.push(<GeometryElement>this.createPoint(shot));
-          }
-        }
-        console.log(this.shotStore);
       }
     } else {
       this.clearBoard();
-      // this.boardInit();
+
     }
   }
 
   drawShots(r: number) {
-    console.log('рисую' + r)
     for (const point of this.shotStore) {
-      console.log('draw 1')
       if (point.r === r) {
-        console.log("draw 2", point.kill)
         this.dr_shots.push(<GeometryElement>this.createPoint(point));
-        console.log('exit' + this.dr_shots.length)
       }
     }
   }
@@ -147,10 +125,10 @@ export class GraphComponent {
   createPoint(shot: ShotResponse) {
     let color = (shot.kill ? "#7ce57c" : "#dc4a4a");
     return this.board.create('point', [shot.x, shot.y], {
-      name: 'a', fixed: true, fillColor: color, fillOpacity: 1, visible: true,
+      name: '', fixed: true, fillColor: color, fillOpacity: 1, visible: true,
       strokewidth: 1
     });
-    // this.refresh(shoq.r);
+
   }
 
   createLabelsR(r: number) {
@@ -243,7 +221,6 @@ export class GraphComponent {
     for (const label of this.labels) {
       this.board.removeObject(label);
     }
-    // this.labels = [];
     for (const shot of this.dr_shots) {
       this.board.removeObject(shot);
     }

@@ -23,11 +23,10 @@ export class ShotService {
     const jwtToken = this.authService.authToken;
 
     let headers = new HttpHeaders();
-    headers = headers.set('Authorization', 'Bearer ${jwtToken}');
-
+    headers = headers.set('Authorization', `Bearer ${jwtToken}`);
+    console.log("kkokokok")
 
     return this.httpClient
       .post<ShotResponse>(`${this.baseUrl}/addShot`, JSON.stringify(formData),{ headers: headers });
-
   }
 }

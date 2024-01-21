@@ -12,6 +12,7 @@ import {MessageService} from "primeng/api";
 import {ShotService} from "../../shot.service";
 import {GraphComponent} from "../graph/graph.component";
 import {HomeComponent} from "../home/home.component";
+import {ShotResponse} from "../../shot-response";
 
 
 @Component({
@@ -33,19 +34,16 @@ import {HomeComponent} from "../home/home.component";
 })
 export class ShotFormComponent {
 
-
   shotForm: FormGroup;
   displayValueX = 0;
   displayValueR = 0;
   private shotService = inject(ShotService);
-  graphComponent = inject(GraphComponent);
+  // graphComponent = inject(GraphComponent);
 
   @Output() rChangeEvent = new EventEmitter<number>()
 
   constructor(private formBuilder: FormBuilder) {
-
     this.shotForm = formBuilder.group({
-
       "x": ["0", [Validators.required,
         Validators.min(-5),
         Validators.max(3),
@@ -64,8 +62,11 @@ export class ShotFormComponent {
   }
 
   submit() {
-    console.log(this.shotForm);
-    this.shotService.addShot(Number(this.shotForm.value.x), Number(this.shotForm.value.y), Number(this.shotForm.value.r));
+    this.shotService.addShot(Number(this.shotForm.value.x), Number(this.shotForm.value.y), Number(this.shotForm.value.r)).subscribe((shot: ShotResponse) => {
+      const data = sessionStorage.getItem('shots');
+      sessionStorage.setItem('shots', JSON.stringify([...JSON.parse(data ?? "[]"), shot]));
+      this.rChangeEvent.emit(shot.r);
+    });
 
   }
 

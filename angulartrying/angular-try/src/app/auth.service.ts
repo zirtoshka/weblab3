@@ -1,73 +1,83 @@
 import {inject, Injectable} from '@angular/core'
-import {HttpClient} from '@angular/common/http'
+import {HttpClient, HttpHeaders} from '@angular/common/http'
 import {Router} from '@angular/router'
 import {Token} from "./token";
+import {deleteCookie, getCookie, setCookie} from "./cookie-utils";
+import axios from "axios";
 
 
-
+const TOKEN_PATH = 'token';
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root'
 })
 export class AuthService {
-    private readonly baseUrl = `http://localhost:8080/api/auth`;
-    private httpClient = inject(HttpClient);
-    private router = inject(Router);
+  private readonly baseUrl = `http://localhost:8080/api/auth`;
+  private httpClient = inject(HttpClient);
+  private router = inject(Router);
 
-    get username(): string | null {
-        return sessionStorage.getItem('username');
+  get username(): string | null {
+    return sessionStorage.getItem('username');
+  }
+
+  set username(username: string | null | undefined) {
+    if (username == null) {
+      sessionStorage.removeItem('username');
+    } else {
+      sessionStorage.setItem('username', username);
     }
+  }
 
-    set username(username: string | null | undefined) {
-        if (username == null) {
-            sessionStorage.removeItem('username');
-        }
-        else {
-            sessionStorage.setItem('username', username);
-        }
+  get isLoggedIn(): boolean {
+    return this.authToken != null;
+  }
+
+  get authToken(): string | null {
+    return getCookie(TOKEN_PATH);
+  }
+
+  set authToken(token: string | null) {
+    if (token == null) {
+      deleteCookie(TOKEN_PATH);
+      sessionStorage.removeItem('shots');
+      sessionStorage.removeItem('r');
+    } else {
+      setCookie(TOKEN_PATH, token);
     }
+  }
 
-    get isLoggedIn(): boolean {
-        return this.authToken != null;
-    }
+  private auth(name: string, token: string) {
+    this.authToken = token;
+    this.username = name;
+    let headers = new HttpHeaders();
+    headers = headers.set('Authorization', `Bearer ${token}`);
+    this.httpClient.get(`http://localhost:8080/api/demo-controller/getShots`, {
+      headers: headers
+    }).subscribe(data => {
+      sessionStorage.setItem('shots', JSON.stringify(data));
+      this.router.navigate(['home']);
+    })
 
-    get authToken(): string | null {
-        return sessionStorage.getItem('token')
-    }
 
-    set authToken(token: string | null | undefined) {
-        if (token == null) {
-          sessionStorage.removeItem('token');
-          sessionStorage.removeItem('shots');
-          sessionStorage.removeItem('r');
-        }
+  }
 
-        else sessionStorage.setItem('token', token)
-    }
+  postData(username: string, password: string, action: string) {
+    return this.httpClient
+      .post<Token>(`${this.baseUrl}/${action}`, {"name": username, password})
+      .subscribe((data) => this.auth(username, data.token));
+  }
 
-    private auth(name: string, token: string) {
-        this.authToken = token
-        this.username = name
-        this.router.navigate(['home'])
-    }
+  login(username: string, password: string) {
+    return this.postData(username, password, "authenticate");
+  }
 
-    postData(username: string, password: string, action: string){
-        return this.httpClient
-            .post<Token>(`${this.baseUrl}/${action}`, {"name": username.valueOf(), password})
-            .subscribe((data) => this.auth(username, data.token))
+  register(username: string, password: string) {
+    return this.postData(username, password, "register");
+  }
 
-    }
-    login(username: string, password: string) {
-        return this.postData(username,password,"authenticate");
-    }
-
-    register(username: string, password: string) {
-        return this.postData(username, password, "register");
-    }
-
-    logout() {
-        this.authToken = null
-        this.username = undefined
-        this.router.navigate(['authenticate'])
-    }
+  logout() {
+    this.authToken = null;
+    this.username = undefined;
+    this.router.navigate(['authenticate']);
+  }
 }
