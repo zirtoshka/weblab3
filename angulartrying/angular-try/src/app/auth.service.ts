@@ -32,11 +32,16 @@ export class AuthService {
     }
 
     get authToken(): string | null {
-        return sessionStorage.getItem('token')  
+        return sessionStorage.getItem('token')
     }
 
     set authToken(token: string | null | undefined) {
-        if (token == null) sessionStorage.removeItem('token')
+        if (token == null) {
+          sessionStorage.removeItem('token');
+          sessionStorage.removeItem('shots');
+          sessionStorage.removeItem('r');
+        }
+
         else sessionStorage.setItem('token', token)
     }
 

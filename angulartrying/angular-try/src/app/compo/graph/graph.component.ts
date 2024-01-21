@@ -8,6 +8,8 @@ import {InputNumberModule} from "primeng/inputnumber";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {SliderModule} from "primeng/slider";
 import {ShotFormComponent} from "../shot-form/shot-form.component";
+import {ShotResponse} from "../../shot-response";
+import {MessageService} from "primeng/api";
 
 @Injectable({
   providedIn: 'root'
@@ -27,72 +29,121 @@ import {ShotFormComponent} from "../shot-form/shot-form.component";
 })
 export class GraphComponent {
   private shotService = inject(ShotService);
-
-
+  private messageService = inject(MessageService)
 
 
   board!: JXG.Board;
 
   figures: GeometryElement[] = [];
-  dr_points: GeometryElement[] = [];
   labels: GeometryElement[] = [];
+  dr_shots: GeometryElement[] = [];
 
 
-  r!: number ;
+  shotStore: ShotResponse[] = [];
 
-  errorMessage: string = "";
+
+  r!: number;
+
   rLabel = 0.3;
 
-
-  constructor() {
-  }
-
   ngOnInit() {
-    this.r= Number(sessionStorage.getItem('r'));
+    this.r = Number(sessionStorage.getItem('r'));
     this.board = this.boardInit();
   }
 
 
   onClick(e: MouseEvent) {
+    this.board.create('point', [1, 1], {
+      name: 'a', fixed: true, fillColor: 'cyan', fillOpacity: 1, visible: true,
+      strokewidth: 1,
+      dragToTopOfLayer: true
+    });
     // @ts-ignore
     if (e.button === 2 || e.target.className === 'JXG_navigation_button') {
       return;
     }
-  this.r=Number( sessionStorage.getItem('r'));
-    if (this.r!=-1000 ) {
-      let coords = this.board.getUsrCoordsOfMouse(event);
+
+    this.r = Number(sessionStorage.getItem('r'));
+    if (this.r >= 0) {
+      let coords = this.board.getUsrCoordsOfMouse(e);
       let x = coords[0].toFixed(2);
       let y = coords[1].toFixed(2);
-      let r =  this.r;
+      let r = this.r;
 
       console.log(x + " " + y + " " + r);
-      this.errorMessage ='';
 
-      this.shotService.addShot(Number(x), Number(y), Number(r));
+      let data = sessionStorage.getItem('shots');
+      if (data) {
+        this.shotStore = JSON.parse(data) as ShotResponse[];
+      } else {
+        this.shotStore = [];
+      }
+
+      this.shotService.addShot(Number(x), Number(y), Number(r)).subscribe((shot: ShotResponse) => {
+        console.log("1сейчас должна  нарисоваться точка")
+        this.shotStore.push(shot);
+        this.drawShots(this.r);
+        sessionStorage.setItem('shots', JSON.stringify(this.shotStore));
+        console.log("2сейчас должна  нарисоваться точка")
+        // this.refresh(shot.r); если это сделать то почему то лейблы остаются
+      });
     } else {
-      this.errorMessage = "You have to choose R"
+      this.showError(' You have to choose correct R');
     }
+    this.board.create('point', [-1, -1], {
+      name: 'a', fixed: true, fillColor: 'red', fillOpacity: 1, visible: true,
+      strokewidth: 1, dragToTopOfLayer: true
+    });
+    this.refresh(Number(sessionStorage.getItem('r')))
   }
 
 
   refresh(r: number) {
-    this.r=r;
-
-    if(r>=0) {
-      if (!this.board) {
-        this.board = this.boardInit();
-        return;
-      } else {
+    this.r = r;
+    if (r >= 0) {
+      {
         this.r = r;
-        this.errorMessage = ''
         console.log("Graph: " + r);
+        console.log("dr_shots " + this.dr_shots.length)
         this.clearBoard();
+        console.log("dr_shots after " + this.dr_shots.length)
+
+        // this.boardInit();
         this.drawFigures(r);
         this.createLabelsR(r);
+
+        // console.log(sessionStorage.getItem("shots"));
+        let data = sessionStorage.getItem('shots');
+        if (data) {
+          this.shotStore = JSON.parse(data) as ShotResponse[];
+        } else {
+          this.shotStore = [];
+        }
+        for (let shot of this.shotStore) {
+          if (shot.r == this.r) {
+            this.dr_shots.push(<GeometryElement>this.createPoint(shot));
+          }
+        }
+        console.log(this.shotStore);
       }
+    } else {
+      this.clearBoard();
+      // this.boardInit();
     }
   }
 
+  drawShots(r: number) {
+    console.log('рисую' + r)
+    for (const point of this.shotStore) {
+      console.log('draw 1')
+      if (point.r === r) {
+
+      }
+      console.log("draw 2", point.kill)
+      this.dr_shots.push(<GeometryElement>this.createPoint(point));
+      console.log('exit' + this.dr_shots.length)
+    }
+  }
 
   drawFigures(r: number) {
     this.figures.push(this.createRectangle(r));
@@ -101,14 +152,15 @@ export class GraphComponent {
   }
 
 
-  // createPoint(point: PointResponse) {
-  //   let color = (point.hit ? "#7ce57c" : "#dc4a4a");
-  //   return this.board.create("point", [point.x, point.y], {
-  //     name: '', fixed: true, fillColor: color, fillOpacity: 1,
-  //     strokewidth: 0
-  //   });
-  //
-  // }
+  createPoint(shot: ShotResponse) {
+    let color = (shot.kill ? "#7ce57c" : "#dc4a4a");
+    return this.board.create('point', [shot.x, shot.y], {
+      name: 'a', fixed: true, fillColor: color, fillOpacity: 1, visible: true,
+      strokewidth: 1
+    });
+    // this.refresh(shoq.r);
+  }
+
   createLabelsR(r: number) {
     if (r > 0.5) {
 
@@ -199,10 +251,10 @@ export class GraphComponent {
     for (const label of this.labels) {
       this.board.removeObject(label);
     }
-    this.labels = [];
-    // for (const point of this.dr_points) {
-    //   this.board.removeObject(point);
-    // }
+    // this.labels = [];
+    for (const shot of this.dr_shots) {
+      this.board.removeObject(shot);
+    }
   }
 
   boardInit() {
@@ -252,5 +304,14 @@ export class GraphComponent {
 
     });
   }
+
+  private showError(message: string) {
+    this.messageService.add({
+      severity: 'error',
+      summary: 'Error',
+      detail: message
+    })
+  }
+
 
 }

@@ -4,11 +4,4 @@
      (click)="onClick($event)"
 >
 </div>
-<div *ngIf="errorMessage!=''" class="alert alert-danger">
-  Error: {{errorMessage}}
-</div>
-<div>
-  <p-slider [(ngModel)]="r" class="w-full" [min]="0" [max]="5" [step]="0.1" (onChange)="refresh(r)" ></p-slider>
 
-
-</div>

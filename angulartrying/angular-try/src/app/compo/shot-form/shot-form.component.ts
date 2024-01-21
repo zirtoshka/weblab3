@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, inject} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, inject, Output} from '@angular/core';
 import {SliderModule} from "primeng/slider";
 import {FormArray, FormControl, FormGroup, FormsModule, NgForm, ReactiveFormsModule, Validators} from "@angular/forms";
 import {TreeSelectModule} from "primeng/treeselect";
@@ -39,7 +39,6 @@ export class ShotFormComponent {
   displayValueR = 0;
   private shotService = inject(ShotService);
   graphComponent = inject(GraphComponent);
-  homeComponent = inject(HomeComponent);
 
 
   constructor(private formBuilder: FormBuilder) {
@@ -75,21 +74,13 @@ export class ShotFormComponent {
 
   onSliderChangeR(event: any) {
     this.displayValueR = event.value;
-    console.log(this.displayValueR);
-    if (this.displayValueR >= 0) {
-      this.graphComponent.refresh(Number(this.displayValueR));
-      sessionStorage.setItem('r', String(this.displayValueR));
-    }else {
-      sessionStorage.setItem('r', '-1000');
+    sessionStorage.setItem('r', String(this.displayValueR));
 
-    }
-
+    this.graphComponent.refresh(Number(this.displayValueR));
+    
 
   }
 
-  getR() {
-    return this.displayValueR;
-  }
 
   protected readonly Number = Number;
 }

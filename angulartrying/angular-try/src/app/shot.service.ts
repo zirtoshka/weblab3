@@ -2,6 +2,8 @@ import {inject, Injectable} from "@angular/core";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Token} from "./token";
 import {AuthService} from "./auth.service";
+import {ShotResponse} from "./shot-response";
+import {Observable} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +14,7 @@ export class ShotService {
   private authService = inject(AuthService);
 
 
-  addShot(x: number, y: number, r: number) {
+  addShot(x: number, y: number, r: number):Observable<ShotResponse> {
     const formData = {
       x: x,
       y: y,
@@ -24,9 +26,8 @@ export class ShotService {
     headers = headers.set('Authorization', 'Bearer ${jwtToken}');
 
 
-    this.httpClient
-      .post(`${this.baseUrl}/addShot`, JSON.stringify(formData),{ headers: headers })
-      .subscribe((data) => console.log(data))
+    return this.httpClient
+      .post<ShotResponse>(`${this.baseUrl}/addShot`, JSON.stringify(formData),{ headers: headers });
 
   }
 }
