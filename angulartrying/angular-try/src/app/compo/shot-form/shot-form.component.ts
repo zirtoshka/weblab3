@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, EventEmitter, inject, Output} from '@angular/core';
-import {SliderModule} from "primeng/slider";
+import {SliderChangeEvent, SliderModule} from "primeng/slider";
 import {FormArray, FormControl, FormGroup, FormsModule, NgForm, ReactiveFormsModule, Validators} from "@angular/forms";
 import {TreeSelectModule} from "primeng/treeselect";
 import {PaginatorModule} from "primeng/paginator";
@@ -40,6 +40,7 @@ export class ShotFormComponent {
   private shotService = inject(ShotService);
   graphComponent = inject(GraphComponent);
 
+  @Output() rChangeEvent = new EventEmitter<number>()
 
   constructor(private formBuilder: FormBuilder) {
 
@@ -72,13 +73,11 @@ export class ShotFormComponent {
     this.displayValueX = event.value;
   }
 
-  onSliderChangeR(event: any) {
-    this.displayValueR = event.value;
+  onSliderChangeR(event: SliderChangeEvent) {
+    this.displayValueR = event.value!!;
+    this.rChangeEvent.emit(event.value);
     sessionStorage.setItem('r', String(this.displayValueR));
-
-    this.graphComponent.refresh(Number(this.displayValueR));
-    
-
+    // this.graphComponent.refresh(Number(this.displayValueR));
   }
 
 

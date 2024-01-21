@@ -1,6 +1,6 @@
 <div class="shot-area">
-  <app-graph></app-graph>
-  <app-shot-form></app-shot-form>
+  <app-graph #graphComponent></app-graph>
+  <app-shot-form (rChangeEvent)="graphComponent.refresh($event)"></app-shot-form>
 </div>
   <!--  <div><app-shots-table></app-shots-table></div>-->
 

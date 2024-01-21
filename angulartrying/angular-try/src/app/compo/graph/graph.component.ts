@@ -46,22 +46,17 @@ export class GraphComponent {
 
   rLabel = 0.3;
 
-  ngOnInit() {
-    this.r = Number(sessionStorage.getItem('r'));
-    this.board = this.boardInit();
+
+  constructor() {
   }
 
+  ngOnInit() {
+    this.r = Number(sessionStorage.getItem('r'));
+    this.refresh(this.r);
+    // this.board = this.boardInit();
+  }
 
   onClick(e: MouseEvent) {
-    this.board.create('point', [1, 1], {
-      name: 'a', fixed: true, fillColor: 'cyan', fillOpacity: 1, visible: true,
-      strokewidth: 1,
-      dragToTopOfLayer: true
-    });
-    // @ts-ignore
-    if (e.button === 2 || e.target.className === 'JXG_navigation_button') {
-      return;
-    }
 
     this.r = Number(sessionStorage.getItem('r'));
     if (this.r >= 0) {
@@ -90,18 +85,16 @@ export class GraphComponent {
     } else {
       this.showError(' You have to choose correct R');
     }
-    this.board.create('point', [-1, -1], {
-      name: 'a', fixed: true, fillColor: 'red', fillOpacity: 1, visible: true,
-      strokewidth: 1, dragToTopOfLayer: true
-    });
-    this.refresh(Number(sessionStorage.getItem('r')))
   }
 
 
   refresh(r: number) {
     this.r = r;
     if (r >= 0) {
-      {
+      if (!this.board) {
+        this.board = this.boardInit();
+        return;
+      } else {
         this.r = r;
         console.log("Graph: " + r);
         console.log("dr_shots " + this.dr_shots.length)
@@ -137,11 +130,10 @@ export class GraphComponent {
     for (const point of this.shotStore) {
       console.log('draw 1')
       if (point.r === r) {
-
+        console.log("draw 2", point.kill)
+        this.dr_shots.push(<GeometryElement>this.createPoint(point));
+        console.log('exit' + this.dr_shots.length)
       }
-      console.log("draw 2", point.kill)
-      this.dr_shots.push(<GeometryElement>this.createPoint(point));
-      console.log('exit' + this.dr_shots.length)
     }
   }
 
