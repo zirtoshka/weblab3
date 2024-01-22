@@ -3,6 +3,7 @@ package com.zirtoshka.pupa.demo;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import com.zirtoshka.pupa.config.JwtService;
 import com.zirtoshka.pupa.shot.AreaChecker;
 import com.zirtoshka.pupa.shot.Coordinates;
@@ -28,7 +29,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/demo-controller")
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 public class DemoController {
 
@@ -37,19 +38,22 @@ public class DemoController {
     private final ShotRepository shotRepository;
 
     @GetMapping
-    public ResponseEntity<String> sayHello(){
-        final HttpHeaders httpHeaders= new HttpHeaders();
+    public ResponseEntity<String> sayHello() {
+        final HttpHeaders httpHeaders = new HttpHeaders();
         System.out.println("it's method sayHello");
         return new ResponseEntity<>("{\"message\": \"Hello from secured endpoint\"}", httpHeaders, HttpStatus.OK);
     }
+
+
+
     @Transactional
     @PostMapping("/addShot")
     public ResponseEntity<String> addShot(
             @RequestHeader("Authorization") String header,
-           @Valid @RequestBody Coordinates coordinates
-            ){
-        String username =getUsername(header);
-        if (userRepository.findByName(username).isEmpty()){
+            @Valid @RequestBody Coordinates coordinates
+    ) throws JsonProcessingException {
+        String username = getUsername(header);
+        if (userRepository.findByName(username).isEmpty()) {
             return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
         }
         Shot shot = new Shot();
@@ -58,18 +62,21 @@ public class DemoController {
         shot.setR(coordinates.getR());
         shot.setOwnername(username);
         shot.setCreateTime(LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")));
-        shot.setKill(AreaChecker.checkIsKill(coordinates.getX(), coordinates.getY(),coordinates.getR()));
+        shot.setKill(AreaChecker.checkIsKill(coordinates.getX(), coordinates.getY(), coordinates.getR()));
         shotRepository.save(shot);
-        return ResponseEntity.ok("{\"message\":\"" +username+"'s shot is ok\"}");
+
+        ObjectMapper mapper = new ObjectMapper(); // Создание экземпляра ObjectMapper
+        String json = mapper.writeValueAsString(shot);
+        return ResponseEntity.ok(json);
     }
 
     @GetMapping("/getShots")
     public ResponseEntity<String> getShots(
             @RequestHeader("Authorization") String header
-            ) throws JsonProcessingException {
-        String username =getUsername(header);
-        System.out.println(username);
-        if (userRepository.findByName(username).isEmpty()){
+    ) throws JsonProcessingException {
+        String username = getUsername(header);
+        System.out.println("Deez " + username);
+        if (userRepository.findByName(username).isEmpty()) {
             return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
         }
         List<Shot> shots = shotRepository.findAllByOwnername(username);
@@ -82,10 +89,10 @@ public class DemoController {
     @Transactional
     public ResponseEntity<?> clearShots(
             @RequestHeader("Authorization") String header
-    ){
-        String username =getUsername(header);
+    ) {
+        String username = getUsername(header);
         System.out.println(username);
-        if (userRepository.findByName(username).isEmpty()){
+        if (userRepository.findByName(username).isEmpty()) {
             return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
         }
         shotRepository.deleteShotsByOwnername(username);
@@ -94,8 +101,7 @@ public class DemoController {
     }
 
 
-
-    private String getUsername(String header){
+    private String getUsername(String header) {
         String jwt = header.substring(7);
         String username = jwtService.extractUsername(jwt);
         return username;
