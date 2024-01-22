@@ -1,33 +1,61 @@
-<br>
-<div>
-<!--  <p-button routerLink="/welcome" icon="pi pi-user" label="welcome"></p-button>-->
+<div class="auth">
+  <div class="left">
+    <div class="ball">
+      <img src="assets/enot.png" height="300px" alt="enot">
+    </div>
 
-  <p-button routerLink="/register" icon="pi pi-user" label="register"></p-button>
+
+  </div>
+
+  <div class="content">
+    <br>
+    <div>
+      <!--  <p-button routerLink="/welcome" icon="pi pi-user" label="welcome"></p-button>-->
+
+      <p-button routerLink="/register" icon="pi pi-user" label="register"></p-button>
+    </div>
+    <br>
+    <h4>Authentication</h4>
+
+    <form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm)">
+
+
+      <div>
+        <label for="username">Username</label>
+        <br>
+        <input id="username" name="username" ngModel pInputText placeholder="Username"
+               type="text">
+      </div>
+      <br>
+      <div>
+        <label for="password">Password</label>
+        <br>
+        <input id="password" name="password" ngModel pInputText placeholder="Password"
+               type="password">
+      </div>
+      <br>
+      <div>
+        <button [disabled]="loginForm.value.username == '' || loginForm.value.password == ''" class="w-full"
+                icon="pi pi-user" label="log in" pButton pRipple>
+        </button>
+      </div>
+
+    </form>
+  </div>
+  <div class="left">
+
+    <div id="bubbles">
+      <div class="bubble x1"></div>
+      <div class="bubble x2"></div>
+      <div class="bubble x3"></div>
+      <div class="bubble x4"></div>
+      <div class="bubble x5"></div>
+      <div class="bubble x6"></div>
+      <div class="bubble x7"></div>
+      <div class="bubble x8"></div>
+      <div class="bubble x9"></div>
+      <div class="bubble x10"></div>
+    </div>
+
+  </div>
 </div>
-<br>
-<h4>Authentication</h4>
-
-<form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm)">
-
-
-  <div>
-    <label for="username">Username</label>
-    <br>
-    <input id="username" name="username" ngModel pInputText placeholder="Username"
-           type="text">
-  </div>
-  <br>
-  <div>
-    <label for="password">Password</label>
-    <br>
-    <input id="password" name="password" ngModel pInputText placeholder="Password"
-           type="password">
-  </div>
-  <br>
-  <div>
-    <button [disabled]="loginForm.value.username == '' || loginForm.value.password == ''" class="w-full"
-              icon="pi pi-user" label="log in" pButton pRipple>
-    </button>
-  </div>
-
-</form>

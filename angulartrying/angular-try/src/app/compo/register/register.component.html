@@ -1,38 +1,50 @@
-<br>
-<div>
-<!--  <p-button routerLink="/welcome" icon="pi pi-user" label="welcome"></p-button>-->
-
-  <p-button routerLink="/authenticate" icon="pi pi-user" label="authenticate"></p-button>
-
-</div>
-<form #registerForm="ngForm" (ngSubmit)="onSubmit(registerForm)" >
-  <div >
-    <div >
-      <h4>Registration</h4>
-    </div>
-    <div>
-      <label  for="username">Username</label>
-      <br>
-      <input  id="username" name="username" ngModel pInputText placeholder="Username" type="text">
-    </div>
-    <br>
-    <div>
-      <label  for="password">Password</label>
-      <br>
-      <input  id="password" name="password" ngModel pInputText placeholder="Password" type="password">
-    </div>
-    <br>
-    <div>
-      <label  for="passwordConfirmation">Confirm password</label>
-      <br>
-      <input  id="passwordConfirmation" name="passwordConfirmation" ngModel pInputText
-             placeholder="Confirm password"
-             type="password">
-    </div>
-    <br>
-    <div>
-      <button [disabled]="registerForm.value.password != registerForm.value.passwordConfirmation"
-              icon="pi pi-user" label="Create an account" pButton pRipple></button>
-    </div>
+<div class="reg">
+  <div class="left">
+<!--    <img src="/assets/images/mygif.gif" />-->
+    <img src="assets/kupi.png" width="200px" alt="capybara">
   </div>
-</form>
+  <div class="content">
+    <br>
+    <div>
+      <!--  <p-button routerLink="/welcome" icon="pi pi-user" label="welcome"></p-button>-->
+
+      <p-button routerLink="/authenticate" icon="pi pi-user" label="authenticate"></p-button>
+
+    </div>
+    <form #registerForm="ngForm" (ngSubmit)="onSubmit(registerForm)">
+      <div>
+        <div>
+          <h4>Registration</h4>
+        </div>
+        <div>
+          <label for="username">Username</label>
+          <br>
+          <input id="username" name="username" ngModel pInputText placeholder="Username" type="text">
+        </div>
+        <br>
+        <div>
+          <label for="password">Password</label>
+          <br>
+          <input id="password" name="password" ngModel pInputText placeholder="Password" type="password">
+        </div>
+        <br>
+        <div>
+          <label for="passwordConfirmation">Confirm password</label>
+          <br>
+          <input id="passwordConfirmation" name="passwordConfirmation" ngModel pInputText
+                 placeholder="Confirm password"
+                 type="password">
+        </div>
+        <br>
+        <div>
+          <button [disabled]="registerForm.value.password != registerForm.value.passwordConfirmation"
+                  icon="pi pi-user" label="Create an account" pButton pRipple></button>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="right">
+    <img src="assets/kupi.png" width="200px" alt="capybara">
+
+  </div>
+</div>
