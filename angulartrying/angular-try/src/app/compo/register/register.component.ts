@@ -28,7 +28,6 @@ export class RegisterComponent {
     onSubmit(form: NgForm) {
         const {username, password, passwordConfirmation} = form.value
         console.log(username, password);
-        debugger
         this.validationFailed = false
         if (username == null || username.length < 6 || username.length > 20)
             this.showError('Username must be between 6 and 20 characters')
@@ -38,9 +37,9 @@ export class RegisterComponent {
             this.showError('Passwords don\'t match')
         if (password == null || password.length < 8 || password.length > 32)
             this.showError('Password must be between 8 and 32 characters')
-        if (this.validationFailed) return
+      if (this.validationFailed) return
+      this.userService.register(username, password)
 
-        this.userService.register(username, password)
     }
 
     private showError(message: string) {

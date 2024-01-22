@@ -29,4 +29,19 @@ export class ShotService {
     return this.httpClient
       .post<ShotResponse>(`${this.baseUrl}/addShot`, JSON.stringify(formData),{ headers: headers });
   }
+
+  clearShots() {
+    const jwtToken = this.authService.authToken;
+
+    let headers = new HttpHeaders();
+    headers = headers.set('Authorization', `Bearer ${jwtToken}`);
+    console.log("kkokokok")
+
+    return this.httpClient
+      .delete<ShotResponse>(`${this.baseUrl}`,{ headers: headers });
+  }
+
+  getShots(): ShotResponse[] {
+    return JSON.parse(sessionStorage.getItem('shots') ?? '[]');
+  }
 }

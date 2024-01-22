@@ -41,6 +41,7 @@ export class ShotFormComponent {
   // graphComponent = inject(GraphComponent);
 
   @Output() rChangeEvent = new EventEmitter<number>()
+  @Output() addShotEvent = new EventEmitter()
 
   constructor(private formBuilder: FormBuilder) {
     this.shotForm = formBuilder.group({
@@ -58,7 +59,13 @@ export class ShotFormComponent {
         Validators.pattern('-?\\d+(\\.\\d+)?')]]
     });
     sessionStorage.setItem('r', '0');
+  }
 
+  clearShots() {
+    sessionStorage.setItem('shots', '[]')
+    this.shotService.clearShots().subscribe()
+    this.addShotEvent.emit()
+    this.rChangeEvent.emit(this.displayValueR)
   }
 
   submit() {
@@ -66,6 +73,7 @@ export class ShotFormComponent {
       const data = sessionStorage.getItem('shots');
       sessionStorage.setItem('shots', JSON.stringify([...JSON.parse(data ?? "[]"), shot]));
       this.rChangeEvent.emit(shot.r);
+      this.addShotEvent.emit();
     });
 
   }
@@ -83,4 +91,6 @@ export class ShotFormComponent {
 
 
   protected readonly Number = Number;
+  protected readonly document = document;
+  protected readonly window = window;
 }

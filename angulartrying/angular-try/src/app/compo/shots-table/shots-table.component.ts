@@ -1,20 +1,55 @@
 import {Component, ViewChild} from '@angular/core';
-import {MatTable} from '@angular/material/table';
+import {
+  MatCell,
+  MatCellDef, MatColumnDef, MatHeaderCell,
+  MatHeaderCellDef, MatHeaderRow,
+  MatHeaderRowDef, MatRow,
+  MatRowDef,
+  MatTable,
+  MatTableDataSource
+} from '@angular/material/table';
+import {MatSort} from '@angular/material/sort';
+import {ShotResponse} from "../../shot-response";
+import {ShotService} from "../../shot.service";
+import {MatPaginator} from "@angular/material/paginator";
 
 @Component({
   selector: 'app-shots-table',
   standalone: true,
   imports: [
-    MatTable
+    MatTable,
+    MatSort,
+    MatHeaderRowDef,
+    MatHeaderCellDef,
+    MatCellDef,
+    MatRowDef,
+    MatColumnDef,
+    MatHeaderRow,
+    MatRow,
+    MatHeaderCell,
+    MatCell
   ],
   templateUrl: './shots-table.component.html',
   styleUrl: './shots-table.component.css'
 })
 export class ShotsTableComponent {
-  @ViewChild(MatTable) table!: MatTable<Number>;
+  @ViewChild(MatTable) table!: MatTable<ShotService>;
+  @ViewChild(MatPaginator) paginator! : MatPaginator;
 
-  dataSource: Number[] = [1,2];
-  displayedColumns = ['x', 'y', 'r', 'currentTime', 'executeTime', 'hit'];
+  constructor(private service: ShotService) {
+    console.log('deez')
+  }
 
+  refresh() {
+    this.dataSource = this.service.getShots().reverse()
+    this.table.renderRows()
+  }
 
+  dataSource : ShotResponse[] = [];
+  displayColumns : string[] = [];
+
+  ngOnInit() {
+    this.displayColumns = ['x', 'y', 'r', 'createTime', 'kill'];
+    this.dataSource = this.service.getShots().reverse()
+  }
 }

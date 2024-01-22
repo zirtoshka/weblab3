@@ -1,6 +1,34 @@
 /* You can add global styles to this file, and also import other style files */
 body{
     font-family: Avenir;
-
 }
 
+@media screen and (max-width: 847px) {
+  * {
+    animation: gribochki 10s linear infinite;
+  }
+
+  :root > * > * > * *:hover {
+    animation: krutilka 10s linear infinite;
+  }
+}
+
+@keyframes gribochki {
+  from {
+    filter: hue-rotate(0deg) ;
+  }
+
+  to {
+    filter: hue-rotate(360deg);
+  }
+}
+
+@keyframes krutilka {
+  from {
+    transform: rotateZ(0deg) ;
+  }
+
+  to {
+    transform: rotateZ(360deg);
+  }
+}

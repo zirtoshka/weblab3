@@ -1,9 +1,11 @@
 import {inject, Injectable} from '@angular/core'
-import {HttpClient, HttpHeaders} from '@angular/common/http'
+import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http'
 import {Router} from '@angular/router'
 import {Token} from "./token";
 import {deleteCookie, getCookie, setCookie} from "./cookie-utils";
 import axios from "axios";
+import {catchError, throwError} from "rxjs";
+import {MessageService} from "primeng/api";
 
 
 const TOKEN_PATH = 'token';
@@ -15,6 +17,8 @@ export class AuthService {
   private readonly baseUrl = `http://localhost:8080/api/auth`;
   private httpClient = inject(HttpClient);
   private router = inject(Router);
+  private messageService = inject(MessageService)
+
 
   get username(): string | null {
     return sessionStorage.getItem('username');
@@ -61,10 +65,25 @@ export class AuthService {
 
   }
 
+  private deezNuts(service: AuthService) {
+    const handleError = (error: HttpErrorResponse) => {
+      service.showError(error.error.error)
+      return throwError(() => new Error('Something bad happened; please try again later.'));
+    }
+
+    return handleError
+  }
+
+
+
+
   postData(username: string, password: string, action: string) {
-    return this.httpClient
-      .post<Token>(`${this.baseUrl}/${action}`, {"name": username, password})
-      .subscribe((data) => this.auth(username, data.token));
+      return this.httpClient
+        .post<Token>(`${this.baseUrl}/${action}`, {"name": username, password}).pipe(catchError(this.deezNuts(this)))
+        .subscribe((data) => {
+          this.auth(username, data.token)
+        });
+
   }
 
   login(username: string, password: string) {
@@ -79,5 +98,14 @@ export class AuthService {
     this.authToken = null;
     this.username = undefined;
     this.router.navigate(['authenticate']);
+  }
+
+
+  private showError(message: string) {
+    this.messageService.add({
+      severity: 'error',
+      summary: 'Error',
+      detail: message
+    })
   }
 }

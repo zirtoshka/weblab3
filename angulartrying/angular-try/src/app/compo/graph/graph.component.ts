@@ -27,10 +27,12 @@ import {MessageService} from "primeng/api";
   templateUrl: './graph.component.html',
   styleUrl: './graph.component.css'
 })
+
 export class GraphComponent {
   private shotService = inject(ShotService);
   private messageService = inject(MessageService)
 
+  @Output() addShotEvent = new EventEmitter()
 
   board!: JXG.Board;
 
@@ -77,6 +79,7 @@ export class GraphComponent {
         this.shotStore.push(shot);
         this.drawShots(this.r);
         sessionStorage.setItem('shots', JSON.stringify(this.shotStore));
+        this.addShotEvent.emit()
       });
     } else {
       this.showError(' You have to choose correct R');

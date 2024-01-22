@@ -2,6 +2,6 @@ export interface ShotResponse {
   x: number;
   y: number;
   r: number;
-  createTime: string;
+  createTime: string
   kill: boolean;
 }

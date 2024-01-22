@@ -40,6 +40,9 @@
 
     </div>
     <br>
-    <p-button type="submit" [disabled]="shotForm.invalid" >send</p-button>
+  <div style="display: flex; justify-content: space-around;">
+    <p-button type="submit" [disabled]="shotForm.invalid">Send</p-button>
+    <p-button type="button" [disabled]="shotForm.invalid" (onClick)="clearShots()">Clear table</p-button>
+  </div>
 </form>
 
