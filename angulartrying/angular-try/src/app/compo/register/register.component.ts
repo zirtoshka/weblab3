@@ -4,18 +4,22 @@ import {FormsModule, NgForm, ReactiveFormsModule} from "@angular/forms";
 import {AuthService} from "../../auth.service";
 import {MessageService} from "primeng/api";
 import {RouterLink} from "@angular/router";
+import {ButtonModule} from "primeng/button";
+import {InputTextModule} from "primeng/inputtext";
 
 
 @Component({
   selector: 'app-register',
   standalone: true,
-    imports: [
-        HeaderComponent,
-        ReactiveFormsModule,
-        FormsModule,
-        RouterLink,
+  imports: [
+    HeaderComponent,
+    ReactiveFormsModule,
+    FormsModule,
+    RouterLink,
+    ButtonModule,
+    InputTextModule,
 
-    ],
+  ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'
 })

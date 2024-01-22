@@ -1,3 +1,5 @@
+<!--<p-button routerLink="/welcome" icon="pi pi-user" label="welcome"></p-button>-->
+<!--<br>-->
 <div class="shot-area">
   <app-graph #graphComponent (addShotEvent)="tableComponent.refresh()"></app-graph>
   <app-shot-form (rChangeEvent)="graphComponent.refresh($event)" (addShotEvent)="tableComponent.refresh()"></app-shot-form>

@@ -1,7 +1,9 @@
 <div class="mat-elevation-z8">
+
   <table mat-table class="full-width-table" aria-label="Elements" [dataSource]="dataSource">
+
         <tr mat-header-row *matHeaderRowDef="displayColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayColumns;"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayColumns;" ></tr>
 
         <!-- Id Column -->
         <ng-container matColumnDef="x">
@@ -29,4 +31,5 @@
           <td mat-cell *matCellDef="let row">{{row.kill}}</td>
         </ng-container>
   </table>
+
 </div>

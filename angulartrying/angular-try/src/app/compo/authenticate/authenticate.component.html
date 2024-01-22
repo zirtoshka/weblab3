@@ -1,20 +1,33 @@
-<form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm)">
-    <div>
-        <div>
-            <h4>Authenticate</h4>
-            <button routerLink="/register" icon="pi pi-user" label="register">register</button>
+<br>
+<div>
+<!--  <p-button routerLink="/welcome" icon="pi pi-user" label="welcome"></p-button>-->
 
-        </div>
-        <div>
-            <label for="username">Username</label>
-            <input id="username" name="username" ngModel pInputText placeholder="Username"
-                   type="text">
-            <label for="password">Password</label>
-            <input id="password" name="password" ngModel pInputText placeholder="Password"
-                   type="password">
-            <button [disabled]="loginForm.value.username == '' || loginForm.value.password == ''" class="w-full"
-                    icon="pi pi-user" label="Sign In" pButton pRipple>send!
-            </button>
-        </div>
-    </div>
+  <p-button routerLink="/register" icon="pi pi-user" label="register"></p-button>
+</div>
+<br>
+<h4>Authentication</h4>
+
+<form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm)">
+
+
+  <div>
+    <label for="username">Username</label>
+    <br>
+    <input id="username" name="username" ngModel pInputText placeholder="Username"
+           type="text">
+  </div>
+  <br>
+  <div>
+    <label for="password">Password</label>
+    <br>
+    <input id="password" name="password" ngModel pInputText placeholder="Password"
+           type="password">
+  </div>
+  <br>
+  <div>
+    <button [disabled]="loginForm.value.username == '' || loginForm.value.password == ''" class="w-full"
+              icon="pi pi-user" label="log in" pButton pRipple>
+    </button>
+  </div>
+
 </form>

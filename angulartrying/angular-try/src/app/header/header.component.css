@@ -4,4 +4,8 @@ header{
   color: #ffffff;
   text-align: center;
   font-family: Avenir;
+  display: flex;
+  justify-content: space-between;
+
 }
+

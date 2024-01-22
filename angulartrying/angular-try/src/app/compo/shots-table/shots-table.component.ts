@@ -6,12 +6,13 @@ import {
   MatHeaderRowDef, MatRow,
   MatRowDef,
   MatTable,
-  MatTableDataSource
+  MatTableDataSource, MatTableModule
 } from '@angular/material/table';
 import {MatSort} from '@angular/material/sort';
 import {ShotResponse} from "../../shot-response";
 import {ShotService} from "../../shot.service";
 import {MatPaginator} from "@angular/material/paginator";
+import {NgClass} from "@angular/common";
 
 @Component({
   selector: 'app-shots-table',
@@ -27,7 +28,10 @@ import {MatPaginator} from "@angular/material/paginator";
     MatHeaderRow,
     MatRow,
     MatHeaderCell,
-    MatCell
+    MatCell,
+    MatPaginator,
+    MatTableModule,
+    NgClass,
   ],
   templateUrl: './shots-table.component.html',
   styleUrl: './shots-table.component.css'

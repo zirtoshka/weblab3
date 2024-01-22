@@ -67,7 +67,10 @@ export class AuthService {
 
   private deezNuts(service: AuthService) {
     const handleError = (error: HttpErrorResponse) => {
-      service.showError(error.error.error)
+      if(error.status==409){
+      service.showError(error.error.error)}
+      else {
+      service.showError(error.message)}
       return throwError(() => new Error('Something bad happened; please try again later.'));
     }
 
