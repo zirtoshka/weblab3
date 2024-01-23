@@ -1,8 +1,10 @@
-
 @if (userService.isLoggedIn) {
 <h1>Hello, {{ userService.username }}!</h1>
 
- <a routerLink="home">shot shot shooots!</a><br><br>
+<a [routerLink]="['/home']" title="Click to go home page">
+<img class="capybara" src="/assets/the-capybara-is-saying-shots.png" alt="capybara" aria-hidden="true" width=200px/>
+</a>
+<br>
 <p-button label="Logout" (onClick)="userService.logout()"></p-button>
 
 } @else {

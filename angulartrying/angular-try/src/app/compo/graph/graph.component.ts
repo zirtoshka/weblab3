@@ -128,7 +128,7 @@ export class GraphComponent {
   createPoint(shot: ShotResponse) {
     let color = (shot.kill ? "#7ce57c" : "#dc4a4a");
     return this.board.create('point', [shot.x, shot.y], {
-      name: '', fixed: true, fillColor: color, fillOpacity: 1, visible: true,
+      name: '', fixed: true, color: color, fillOpacity: 1, visible: true,
       strokewidth: 1
     });
 
@@ -193,7 +193,7 @@ export class GraphComponent {
     let rectanglePoint3 = this.board.create('point', [-r / 2, r], {name: '', fixed: true, visible: false});
     let rectanglePoint4 = this.board.create('point', [0, r], {name: '', fixed: true, visible: false});
     return this.board.create('polygon', [rectanglePoint1, rectanglePoint2, rectanglePoint3, rectanglePoint4],
-      {fillColor: 'fuchsia', fillOpacity: 1});
+      {fillColor: '#9E6ED4', fillOpacity: 1});
   }
 
   createTriangle(r: number) {
@@ -202,7 +202,7 @@ export class GraphComponent {
     let trianglePoint2 = this.board.create('point', [-r / 2, 0], {name: '', fixed: true, visible: false});
     let trianglePoint3 = this.board.create('point', [0, -r], {name: '', fixed: true, visible: false});
     return this.board.create('polygon', [trianglePoint1, trianglePoint2, trianglePoint3], {
-      fillColor: 'fuchsia',
+      fillColor: '#9E6ED4',
       fillOpacity: 1
     });
   }
@@ -214,7 +214,7 @@ export class GraphComponent {
     let centerPoint = this.board.create('point', [0, 0], {name: '', fixed: true, visible: false});
 
     return this.board.create('sector', [centerPoint, circlePoint1, circlePoint2],
-      {fillColor: 'fuchsia', fillOpacity: 1});
+      {fillColor: '#9E6ED4', fillOpacity: 1});
   }
 
   clearBoard() {
